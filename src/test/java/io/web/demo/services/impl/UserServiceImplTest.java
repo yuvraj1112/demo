@@ -89,15 +89,15 @@ class UserServiceImplTest {
         r.setName("CEO");
         r.setId(10L);
 
-        Mockito.when(roleRepository.findById(10L)).thenReturn(Optional.of(r));
-        Mockito.when(userRepository.findById(100L)).thenReturn(Optional.of(user));
+        Mockito.when(roleRepository.findById(r.getId())).thenReturn(Optional.of(r));
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.save(user)).thenReturn(user);
         User savedUser = null;
-        savedUser = assertDoesNotThrow(() -> userService.assignRole(100L, 10L));
+        savedUser = assertDoesNotThrow(() -> userService.assignRole(user.getId(), r.getId()));
 
         assertNotNull(savedUser);
         assertNotNull(savedUser.getRole());
-        assertEquals(10L,savedUser.getRole().getId());
+        assertEquals(r,savedUser.getRole());
 
     }
 
@@ -108,10 +108,10 @@ class UserServiceImplTest {
         user.setLastName("Agarawal");
         user.setId(100L);
 
-        Mockito.when(userRepository.findById(100L)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(roleRepository.findById(10L)).thenReturn(Optional.empty());
 
-        assertThrows(RoleNotFoundException.class,() -> userService.assignRole(100L,10L));
+        assertThrows(RoleNotFoundException.class,() -> userService.assignRole(user.getId(),10L));
     }
 
     @Test
